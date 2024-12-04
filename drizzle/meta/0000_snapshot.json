@@ -1,42 +1,64 @@
 {
-  "id": "a8914fb9-5629-4ee9-9c2b-41e9ef63579a",
+  "id": "de13ca6e-c201-4cc9-9e72-ad12f90a2720",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.assignments": {
-      "name": "assignments",
+    "public.class_licenses": {
+      "name": "class_licenses",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "class_id": {
           "name": "class_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "type": {
-          "name": "type",
-          "type": "assignmentTypes",
-          "typeSchema": "public",
+        "license_id": {
+          "name": "license_id",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
+      "foreignKeys": {
+        "class_licenses_class_id_classes_class_id_fk": {
+          "name": "class_licenses_class_id_classes_class_id_fk",
+          "tableFrom": "class_licenses",
+          "tableTo": "classes",
+          "columnsFrom": [
+            "class_id"
+          ],
+          "columnsTo": [
+            "class_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "class_licenses_license_id_licenses_subscriptions_license_id_fk": {
+          "name": "class_licenses_license_id_licenses_subscriptions_license_id_fk",
+          "tableFrom": "class_licenses",
+          "tableTo": "licenses_subscriptions",
+          "columnsFrom": [
+            "license_id"
+          ],
+          "columnsTo": [
+            "license_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "class_licenses_class_id_license_id_pk": {
+          "name": "class_licenses_class_id_license_id_pk",
+          "columns": [
+            "class_id",
+            "license_id"
+          ]
+        }
+      },
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
@@ -50,18 +72,60 @@
           "name": "class_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "user_id": {
           "name": "user_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "user_role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
+      "foreignKeys": {
+        "class_users_class_id_classes_class_id_fk": {
+          "name": "class_users_class_id_classes_class_id_fk",
+          "tableFrom": "class_users",
+          "tableTo": "classes",
+          "columnsFrom": [
+            "class_id"
+          ],
+          "columnsTo": [
+            "class_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "class_users_user_id_users_user_id_fk": {
+          "name": "class_users_user_id_users_user_id_fk",
+          "tableFrom": "class_users",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "class_users_class_id_user_id_pk": {
+          "name": "class_users_class_id_user_id_pk",
+          "columns": [
+            "class_id",
+            "user_id"
+          ]
+        }
+      },
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
@@ -71,14 +135,20 @@
       "name": "classes",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
+        "class_id": {
+          "name": "class_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
         },
-        "name": {
-          "name": "name",
+        "class_name": {
+          "name": "class_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "class_reference": {
+          "name": "class_reference",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -92,40 +162,274 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.environment": {
+      "name": "environment",
+      "schema": "",
+      "columns": {
+        "environment_id": {
+          "name": "environment_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "settings": {
+          "name": "settings",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "active_status": {
+          "name": "active_status",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "environment_name": {
+          "name": "environment_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "environment_description": {
+          "name": "environment_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.environment_class": {
+      "name": "environment_class",
+      "schema": "",
+      "columns": {
+        "environment_id": {
+          "name": "environment_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "class_id": {
+          "name": "class_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "environment_class_environment_id_environment_environment_id_fk": {
+          "name": "environment_class_environment_id_environment_environment_id_fk",
+          "tableFrom": "environment_class",
+          "tableTo": "environment",
+          "columnsFrom": [
+            "environment_id"
+          ],
+          "columnsTo": [
+            "environment_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "environment_class_class_id_classes_class_id_fk": {
+          "name": "environment_class_class_id_classes_class_id_fk",
+          "tableFrom": "environment_class",
+          "tableTo": "classes",
+          "columnsFrom": [
+            "class_id"
+          ],
+          "columnsTo": [
+            "class_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "environment_class_class_id_environment_id_pk": {
+          "name": "environment_class_class_id_environment_id_pk",
+          "columns": [
+            "class_id",
+            "environment_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.licenses_subscriptions": {
+      "name": "licenses_subscriptions",
+      "schema": "",
+      "columns": {
+        "license_id": {
+          "name": "license_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "api_key": {
+          "name": "api_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "school_name": {
+          "name": "school_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subscription_type": {
+          "name": "subscription_type",
+          "type": "subscription_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'inactive'"
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "autorenew": {
+          "name": "autorenew",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "licenses_subscriptions_api_key_unique": {
+          "name": "licenses_subscriptions_api_key_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "api_key"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.moderators": {
+      "name": "moderators",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "license_id": {
+          "name": "license_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "moderators_user_id_users_user_id_fk": {
+          "name": "moderators_user_id_users_user_id_fk",
+          "tableFrom": "moderators",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "moderators_license_id_licenses_subscriptions_license_id_fk": {
+          "name": "moderators_license_id_licenses_subscriptions_license_id_fk",
+          "tableFrom": "moderators",
+          "tableTo": "licenses_subscriptions",
+          "columnsFrom": [
+            "license_id"
+          ],
+          "columnsTo": [
+            "license_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "moderators_user_id_license_id_pk": {
+          "name": "moderators_user_id_license_id_pk",
+          "columns": [
+            "user_id",
+            "license_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.users": {
       "name": "users",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
+        "user_id": {
+          "name": "user_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
         },
-        "display_name": {
-          "name": "display_name",
+        "first_name": {
+          "name": "first_name",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "last_name": {
+          "name": "last_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
         },
         "email": {
           "name": "email",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "password_hash": {
           "name": "password_hash",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "type": {
-          "name": "type",
-          "type": "userTypes",
-          "typeSchema": "public",
+        "phone": {
+          "name": "phone",
+          "type": "varchar(20)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
@@ -138,20 +442,21 @@
     }
   },
   "enums": {
-    "public.assignmentTypes": {
-      "name": "assignmentTypes",
-      "schema": "public",
-      "values": [
-        "playground"
-      ]
-    },
-    "public.userTypes": {
-      "name": "userTypes",
+    "public.user_role": {
+      "name": "user_role",
       "schema": "public",
       "values": [
         "student",
-        "teacher",
-        "admin"
+        "teacher"
+      ]
+    },
+    "public.subscription_type": {
+      "name": "subscription_type",
+      "schema": "public",
+      "values": [
+        "inactive",
+        "basic",
+        "unlimited"
       ]
     }
   },
