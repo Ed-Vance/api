@@ -13,6 +13,7 @@ export const users = table("users", {
     display_name: t.text().notNull(),
     email: t.text().notNull(),
     password_hash: t.text().notNull(), //extend to use oauth2 at some point
+    is_admin: t.boolean().notNull().default(false),
     // type: userTypes(), //lets think about different types of users later as per ^
     //I personally think a teacher is always a teacher, a student always a student
     //this is true 99.9% of of the time.
