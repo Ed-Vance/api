@@ -1,5 +1,5 @@
 {
-  "id": "de13ca6e-c201-4cc9-9e72-ad12f90a2720",
+  "id": "35b30364-a31e-4b77-9d6c-6b9e1ea6d89b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -265,6 +265,85 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.environment_history": {
+      "name": "environment_history",
+      "schema": "",
+      "columns": {
+        "environment_id": {
+          "name": "environment_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "message": {
+          "name": "message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "message_type": {
+          "name": "message_type",
+          "type": "message_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "environment_history_environment_id_environment_environment_id_fk": {
+          "name": "environment_history_environment_id_environment_environment_id_fk",
+          "tableFrom": "environment_history",
+          "tableTo": "environment",
+          "columnsFrom": [
+            "environment_id"
+          ],
+          "columnsTo": [
+            "environment_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "environment_history_user_id_users_user_id_fk": {
+          "name": "environment_history_user_id_users_user_id_fk",
+          "tableFrom": "environment_history",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "environment_history_environment_id_user_id_pk": {
+          "name": "environment_history_environment_id_user_id_pk",
+          "columns": [
+            "environment_id",
+            "user_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.licenses_subscriptions": {
       "name": "licenses_subscriptions",
       "schema": "",
@@ -448,6 +527,14 @@
       "values": [
         "student",
         "teacher"
+      ]
+    },
+    "public.message_type": {
+      "name": "message_type",
+      "schema": "public",
+      "values": [
+        "response",
+        "query"
       ]
     },
     "public.subscription_type": {

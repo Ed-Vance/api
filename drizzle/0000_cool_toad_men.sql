@@ -1,4 +1,5 @@
 CREATE TYPE "public"."user_role" AS ENUM('student', 'teacher');--> statement-breakpoint
+CREATE TYPE "public"."message_type" AS ENUM('response', 'query');--> statement-breakpoint
 CREATE TYPE "public"."subscription_type" AS ENUM('inactive', 'basic', 'unlimited');--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "class_licenses" (
 	"class_id" integer NOT NULL,
@@ -31,6 +32,15 @@ CREATE TABLE IF NOT EXISTS "environment_class" (
 	"environment_id" integer NOT NULL,
 	"class_id" integer NOT NULL,
 	CONSTRAINT "environment_class_class_id_environment_id_pk" PRIMARY KEY("class_id","environment_id")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "environment_history" (
+	"environment_id" integer NOT NULL,
+	"user_id" integer NOT NULL,
+	"timestamp" timestamp NOT NULL,
+	"message" text NOT NULL,
+	"message_type" "message_type" NOT NULL,
+	CONSTRAINT "environment_history_environment_id_user_id_pk" PRIMARY KEY("environment_id","user_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "licenses_subscriptions" (
@@ -91,6 +101,18 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "environment_class" ADD CONSTRAINT "environment_class_class_id_classes_class_id_fk" FOREIGN KEY ("class_id") REFERENCES "public"."classes"("class_id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "environment_history" ADD CONSTRAINT "environment_history_environment_id_environment_environment_id_fk" FOREIGN KEY ("environment_id") REFERENCES "public"."environment"("environment_id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "environment_history" ADD CONSTRAINT "environment_history_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("user_id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
