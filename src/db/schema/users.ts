@@ -9,9 +9,11 @@ export const userTypes = t.pgEnum("userTypes", ["student", "teacher", "admin"]);
 // by moving this "type" to there, and adding an "is_admin" flag. (or more fine tuned permissions.)
 
 export const users = table("users", {
-    id: t.integer(),
-    display_name: t.text(),
-    email: t.text(),
-    password_hash: t.text(), //extend to use oauth2 at some point
-    type: userTypes(),
+    id: t.serial("user_id").primaryKey(),
+    display_name: t.text().notNull(),
+    email: t.text().notNull(),
+    password_hash: t.text().notNull(), //extend to use oauth2 at some point
+    // type: userTypes(), //lets think about different types of users later as per ^
+    //I personally think a teacher is always a teacher, a student always a student
+    //this is true 99.9% of of the time.
 });
