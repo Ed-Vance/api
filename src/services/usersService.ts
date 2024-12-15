@@ -3,6 +3,9 @@ import { users } from '../db/schema/users';
 import { classes } from '../db/schema/classes';
 import { class_users } from '../db/schema/class_users';
 import { eq } from 'drizzle-orm';
+import bcrypt from 'bcrypt';
+
+const SALT_ROUNDS = 10; 
 
 export const getAllUsers = async () => {
   const result = await db.select().from(users).execute();
@@ -21,7 +24,12 @@ export const createUser = async (userData: {
   password: string;
   phone: string;
 }) => {
-  const result = await db.insert(users).values(userData).returning().execute();
+  const hashedPassword = await bcrypt.hash(userData.password, SALT_ROUNDS);
+  
+  const result = await db.insert(users).values({
+    ...userData,
+    password: hashedPassword,
+  }).returning().execute();
   return result[0];
 };
 
@@ -35,6 +43,10 @@ export const updateUser = async (
     phone: string;
   }>
 ) => {
+  if (userData.password) {
+    userData.password = await bcrypt.hash(userData.password, SALT_ROUNDS);
+  }
+
   const result = await db.update(users).set(userData).where(eq(users.user_id, userId)).returning().execute();
   return result[0];
 };
