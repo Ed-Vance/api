@@ -1,4 +1,3 @@
-// db/schema/classes.ts
 import { serial, text, integer } from 'drizzle-orm/pg-core';
 import { pgTable } from 'drizzle-orm/pg-core';
 

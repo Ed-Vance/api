@@ -1,4 +1,3 @@
-// db/schema/clients.ts
 import { serial, text, timestamp, boolean } from 'drizzle-orm/pg-core';
 import { pgTable } from 'drizzle-orm/pg-core';
 import { subscriptionTypeEnum } from './enums';

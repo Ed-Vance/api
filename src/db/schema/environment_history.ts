@@ -1,4 +1,3 @@
-// db/schema/environment_history.ts
 import { integer, text, timestamp } from 'drizzle-orm/pg-core';
 import { pgTable, primaryKey } from 'drizzle-orm/pg-core';
 import { messageTypeEnum } from './enums';

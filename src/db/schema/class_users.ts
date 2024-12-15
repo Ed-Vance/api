@@ -1,4 +1,3 @@
-// db/schema/class_users.ts
 import { integer } from 'drizzle-orm/pg-core';
 import { pgTable, primaryKey } from 'drizzle-orm/pg-core';
 import { userRoleEnum } from './enums';

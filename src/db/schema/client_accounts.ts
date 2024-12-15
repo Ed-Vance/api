@@ -1,4 +1,3 @@
-// db/schema/client_accounts.ts
 import { integer } from 'drizzle-orm/pg-core';
 import { pgTable, primaryKey } from 'drizzle-orm/pg-core';
 

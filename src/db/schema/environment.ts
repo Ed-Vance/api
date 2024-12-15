@@ -1,4 +1,3 @@
-// db/schema/environment.ts
 import { serial, text, json, boolean, integer, timestamp } from 'drizzle-orm/pg-core';
 import { pgTable } from 'drizzle-orm/pg-core';
 
