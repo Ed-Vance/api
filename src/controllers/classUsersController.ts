@@ -1,7 +1,17 @@
 import { Request, Response, RequestHandler } from 'express';
 import * as classUsersService from '../services/classUsersService';
  
-
+/**
+ * Retrieves all class-user associations.
+ *
+ * @async
+ * @function getAllClassUsers
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON array of all class-user associations.
+ *   - **Failure:** Sends a JSON response with an error message and HTTP 500 status.
+ */
 export const getAllClassUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
     const result = await classUsersService.getAllClassUsers();
@@ -11,6 +21,18 @@ export const getAllClassUsers: RequestHandler = async (req: Request, res: Respon
   }
 };
 
+
+/**
+ * Retrieves a specific class-user association by class ID and user ID.
+ *
+ * @async
+ * @function getClassUserByIds
+ * @param {Request} req - Express request object containing `classId` and `userId` parameters.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON object of the class-user association.
+ *   - **Failure:** Sends a JSON response with an error message and appropriate HTTP status.
+ */
 export const getClassUserByIds: RequestHandler = async (req: Request, res: Response) => {
   const classId = Number(req.params.classId);
   const userId = Number(req.params.userId);
@@ -31,6 +53,17 @@ export const getClassUserByIds: RequestHandler = async (req: Request, res: Respo
   }
 };
 
+/**
+ * Creates a new class-user association.
+ *
+ * @async
+ * @function createClassUser
+ * @param {Request} req - Express request object containing `class_id`, `user_id`, and `role` in the body.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON object of the newly created class-user association with HTTP 201 status.
+ *   - **Failure:** Sends a JSON response with an error message and appropriate HTTP status.
+ */
 export const createClassUser: RequestHandler = async (req: Request, res: Response) => {
   const { class_id, user_id, role } = req.body;
   if (!class_id || !user_id || !role) {
@@ -46,6 +79,17 @@ export const createClassUser: RequestHandler = async (req: Request, res: Respons
   }
 };
 
+/**
+ * Updates the role of a user in a specific class.
+ *
+ * @async
+ * @function updateClassUser
+ * @param {Request} req - Express request object containing `classId` and `userId` parameters and `role` in the body.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON object of the updated class-user association.
+ *   - **Failure:** Sends a JSON response with an error message and appropriate HTTP status.
+ */
 export const updateClassUser: RequestHandler = async (req: Request, res: Response) => {
   const classId = Number(req.params.classId);
   const userId = Number(req.params.userId);
@@ -68,6 +112,17 @@ export const updateClassUser: RequestHandler = async (req: Request, res: Respons
   }
 };
 
+/**
+ * Deletes a class-user association.
+ *
+ * @async
+ * @function deleteClassUser
+ * @param {Request} req - Express request object containing `classId` and `userId` parameters.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON object of the deleted class-user association.
+ *   - **Failure:** Sends a JSON response with an error message and appropriate HTTP status.
+ */
 export const deleteClassUser: RequestHandler = async (req: Request, res: Response) => {
   const classId = Number(req.params.classId);
   const userId = Number(req.params.userId);

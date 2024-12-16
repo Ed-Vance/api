@@ -1,6 +1,18 @@
 import { Request, Response, RequestHandler } from 'express';
 import * as environmentHistoryService from '../services/environmentHistoryService';
- 
+
+
+/**
+ * Retrieves all environment history records from the database.
+ *
+ * @async
+ * @function getAllEnvironmentHistories
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON array of all environment history records.
+ *   - **Failure:** Sends a JSON response with an error message and HTTP 500 status.
+ */
 export const getAllEnvironmentHistories: RequestHandler = async (req: Request, res: Response) => {
   try {
     const histories = await environmentHistoryService.getAllEnvironmentHistories();
@@ -10,6 +22,17 @@ export const getAllEnvironmentHistories: RequestHandler = async (req: Request, r
   }
 };
 
+/**
+ * Retrieves environment history records by environment ID and user ID.
+ *
+ * @async
+ * @function getEnvironmentHistoryByIds
+ * @param {Request} req - Express request object containing `environmentId` and `userId` parameters.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON array of environment history records.
+ *   - **Failure:** Sends a JSON response with an error message and appropriate HTTP status.
+ */
 export const getEnvironmentHistoryByIds: RequestHandler = async (req: Request, res: Response) => {
   const environmentId = Number(req.params.environmentId);
   const userId = Number(req.params.userId);
@@ -31,6 +54,17 @@ export const getEnvironmentHistoryByIds: RequestHandler = async (req: Request, r
   }
 };
 
+/**
+ * Creates a new environment history record in the database.
+ *
+ * @async
+ * @function createEnvironmentHistory
+ * @param {Request} req - Express request object containing `environment_id`, `user_id`, `timestamp`, `message`, and `message_type` in the body.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON object of the newly created environment history with HTTP 201 status.
+ *   - **Failure:** Sends a JSON response with an error message and appropriate HTTP status.
+ */
 export const createEnvironmentHistory: RequestHandler = async (req: Request, res: Response) => {
   const { environment_id, user_id, timestamp, message, message_type } = req.body;
   if (!environment_id || !user_id || !timestamp || !message || !message_type) {
@@ -52,6 +86,17 @@ export const createEnvironmentHistory: RequestHandler = async (req: Request, res
   }
 };
 
+/**
+ * Deletes environment history records by environment ID and user ID.
+ *
+ * @async
+ * @function deleteEnvironmentHistory
+ * @param {Request} req - Express request object containing `environmentId` and `userId` parameters.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON array of deleted environment history records.
+ *   - **Failure:** Sends a JSON response with an error message and appropriate HTTP status.
+ */
 export const deleteEnvironmentHistory: RequestHandler = async (req: Request, res: Response) => {
   const environmentId = Number(req.params.environmentId);
   const userId = Number(req.params.userId);

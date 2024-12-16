@@ -17,6 +17,18 @@ interface UserWithoutPassword {
   email: string;
   phone: string;
 }
+/**
+ * Validates user credentials and generates a JWT token upon successful authentication.
+ *
+ * @async
+ * @function checkUserCredentials
+ * @param {string} email - The user's email address.
+ * @param {string} password - The user's plaintext password.
+ * @returns {Promise<{ user: UserWithoutPassword; token: string } | null>} 
+ *   - **Success:** Returns an object containing the user data (excluding password) and a JWT token.
+ *   - **Failure:** Returns `null` if authentication fails.
+ * @throws {Error} Throws an error if JWT_SECRET is not defined or if any database operation fails.
+ */
 export const checkUserCredentials = async (email: string, password: string) => {
   const result = await db.select().from(users).where(eq(users.email, email)).execute();
   const user = result[0];

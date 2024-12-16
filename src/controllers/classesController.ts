@@ -1,7 +1,17 @@
 import { Request, Response, RequestHandler } from 'express';
 import * as classesService from '../services/classesService';
  
-// Get all 
+/**
+ * Retrieves all classes from the database.
+ *
+ * @async
+ * @function getAllClasses
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON array of all classes.
+ *   - **Failure:** Sends a JSON response with an error message and HTTP 500 status.
+ */
 export const getAllClasses: RequestHandler = async (req: Request, res: Response) => {
   try {
     const classes = await classesService.getAllClasses();
@@ -11,7 +21,17 @@ export const getAllClasses: RequestHandler = async (req: Request, res: Response)
   }
 };
  
-// Get class
+/**
+ * Retrieves a specific class by its ID.
+ *
+ * @async
+ * @function getClassById
+ * @param {Request} req - Express request object containing `id` parameter.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON object of the requested class.
+ *   - **Failure:** Sends a JSON response with an error message and appropriate HTTP status.
+ */
 export const getClassById: RequestHandler = async (req: Request, res: Response) => {
   const classId = Number(req.params.id);
   if (isNaN(classId)) {
@@ -31,7 +51,17 @@ export const getClassById: RequestHandler = async (req: Request, res: Response) 
   }
 };
 
-// Create the class
+/**
+ * Creates a new class in the database.
+ *
+ * @async
+ * @function createClass
+ * @param {Request} req - Express request object containing `class_name`, `class_reference`, and `license_id` in the body.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON object of the newly created class with HTTP 201 status.
+ *   - **Failure:** Sends a JSON response with an error message and appropriate HTTP status.
+ */
 export const createClass: RequestHandler = async (req: Request, res: Response) => {
   const { class_name, class_reference, license_id } = req.body;
   if (!class_name || !class_reference || !license_id) {
@@ -47,7 +77,17 @@ export const createClass: RequestHandler = async (req: Request, res: Response) =
   }
 };
 
-// Update class information
+/**
+ * Updates information of an existing class.
+ *
+ * @async
+ * @function updateClass
+ * @param {Request} req - Express request object containing `id` parameter and updated class data in the body.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON object of the updated class.
+ *   - **Failure:** Sends a JSON response with an error message and appropriate HTTP status.
+ */
 export const updateClass: RequestHandler = async (req: Request, res: Response) => {
   const classId = Number(req.params.id);
   if (isNaN(classId)) {
@@ -67,7 +107,17 @@ export const updateClass: RequestHandler = async (req: Request, res: Response) =
   }
 };
 
-// delete the class
+/**
+ * Deletes a class from the database.
+ *
+ * @async
+ * @function deleteClass
+ * @param {Request} req - Express request object containing `id` parameter.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON object of the deleted class.
+ *   - **Failure:** Sends a JSON response with an error message and appropriate HTTP status.
+ */
 export const deleteClass: RequestHandler = async (req: Request, res: Response) => {
   const classId = Number(req.params.id);
   if (isNaN(classId)) {
@@ -87,7 +137,17 @@ export const deleteClass: RequestHandler = async (req: Request, res: Response) =
   }
 };
 
-// Get the enfironment attributed to a class
+/**
+ * Retrieves all environments associated with a specific class.
+ *
+ * @async
+ * @function getEnvironmentsForClass
+ * @param {Request} req - Express request object containing `id` parameter.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON array of environments related to the class.
+ *   - **Failure:** Sends a JSON response with an error message and appropriate HTTP status.
+ */
 export const getEnvironmentsForClass: RequestHandler = async (req: Request, res: Response) => {
   const classId = Number(req.params.id);
   if (isNaN(classId)) {
@@ -103,7 +163,17 @@ export const getEnvironmentsForClass: RequestHandler = async (req: Request, res:
   }
 };
 
-// get the users attached to the class, notably also gets their role for that
+/**
+ * Retrieves all users associated with a specific class, including their roles.
+ *
+ * @async
+ * @function getUsersForClass
+ * @param {Request} req - Express request object containing `id` parameter.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON array of users with their roles in the class.
+ *   - **Failure:** Sends a JSON response with an error message and appropriate HTTP status.
+ */
 export const getUsersForClass: RequestHandler = async (req: Request, res: Response) => {
   const classId = Number(req.params.id);
   if (isNaN(classId)) {

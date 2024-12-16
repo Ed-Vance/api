@@ -37,7 +37,7 @@ I got to the point in the interface where I was doing the history and requests s
 2. Added an auth route for validating passwords (although its a bit basic and I think theres some hasing libraries good for this).
 3. Added in the environment history object, also allowed multiple accounts to be moderators to a client account (used to be customer account)
 4. Didnt really bother with the comments for the actual functions, all pretty basic CRUD except for some routes that I suspected Id need. 
-5. Tests were done using generated content with some modifications, thought it could be good but didnt want to put too much effort into them given the speed of which we want to get this application running.
+5. Tests were done using generated content with some modifications, thought it could be good but didnt want to put too much effort into them given the speed of which we want to get this application running, comments were also generated as I thought this might assist ya
 
 ## Testing
 

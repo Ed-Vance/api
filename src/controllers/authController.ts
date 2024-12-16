@@ -1,6 +1,17 @@
 import { Request, Response, RequestHandler } from 'express';
 import * as authService from '../services/authService';
 
+/**
+ * Handles user login by verifying credentials and issuing a JWT token.
+ *
+ * @async
+ * @function login
+ * @param {Request} req - Express request object containing `email` and `password` in the body.
+ * @param {Response} res - Express response object used to send back the response.
+ * @returns {Promise<void>} 
+ *   - **Success:** Sends a JSON response with a success message, user data, and JWT token.
+ *   - **Failure:** Sends a JSON response with an error message and appropriate HTTP status code.
+ */
 export const login: RequestHandler = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 

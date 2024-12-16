@@ -9,7 +9,7 @@ describe('Auth', () => {
   let createdUserId: number | null = null;
   let testEmail: string;
   const password = 'password123';
-  const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+  const JWT_SECRET = process.env.JWT_SECRET || 'wrong-key-in-auth-tests';
 
   beforeAll(async () => {
     testEmail = `loginuser${Date.now()}@example.com`;
