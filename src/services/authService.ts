@@ -30,6 +30,7 @@ interface UserWithoutPassword {
  * @throws {Error} Throws an error if JWT_SECRET is not defined or if any database operation fails.
  */
 export const checkUserCredentials = async (email: string, password: string) => {
+  console.log("Checking")
   const result = await db.select().from(users).where(eq(users.email, email)).execute();
   const user = result[0];
   
