@@ -7,7 +7,6 @@ import bcrypt from 'bcrypt';
 
 const SALT_ROUNDS = 10; 
 
-
 /**
  * Retrieves all users from the database.
  *
@@ -19,7 +18,7 @@ const SALT_ROUNDS = 10;
  */
 export const getAllUsers = async () => {
   const result = await db.select().from(users).execute();
-  return result;
+  return result.map(({ password, ...user }) => user);
 };
 
 /**
@@ -35,7 +34,31 @@ export const getAllUsers = async () => {
  */
 export const getUserById = async (userId: number) => {
   const result = await db.select().from(users).where(eq(users.user_id, userId)).execute();
-  return result[0];
+  const user = result[0];
+  if (user) {
+    return user;
+  }
+  return undefined;
+};
+
+/**
+ * Retrieves a user by their email address.
+ *
+ * @async
+ * @function getUserByEmail
+ * @param {string} email - The email address of the user to retrieve.
+ * @returns {Promise<Object | undefined>} 
+ *   - **Success:** Returns the user object.
+ *   - **Failure:** Returns `undefined` if the user is not found.
+ * @throws {Error} Throws an error if the database query fails.
+ */
+export const getUserByEmail = async (email: string) => {
+  const result = await db.select().from(users).where(eq(users.email, email)).execute();
+  const user = result[0];
+  if (user) {
+    return user;
+  }
+  return undefined;
 };
 
 /**
@@ -65,7 +88,8 @@ export const createUser = async (userData: {
     ...userData,
     password: hashedPassword,
   }).returning().execute();
-  return result[0];
+  const { password, ...userWithoutPassword } = result[0];
+  return userWithoutPassword;
 };
 
 /**
@@ -100,7 +124,12 @@ export const updateUser = async (
   }
 
   const result = await db.update(users).set(userData).where(eq(users.user_id, userId)).returning().execute();
-  return result[0];
+  const updatedUser = result[0];
+  if (updatedUser) {
+    const { password, ...userWithoutPassword } = updatedUser;
+    return userWithoutPassword;
+  }
+  return undefined;
 };
 
 /**
@@ -116,7 +145,12 @@ export const updateUser = async (
  */
 export const deleteUser = async (userId: number) => {
   const result = await db.delete(users).where(eq(users.user_id, userId)).returning().execute();
-  return result[0];
+  const deletedUser = result[0];
+  if (deletedUser) {
+    const { password, ...userWithoutPassword } = deletedUser;
+    return userWithoutPassword;
+  }
+  return undefined;
 };
 
 /**
@@ -135,7 +169,8 @@ export const getUserClasses = async (userId: number) => {
       class_name: classes.class_name,
       class_reference: classes.class_reference,
       role: class_users.role
-    }).from(class_users).innerJoin(classes, eq(class_users.class_id, classes.class_id)).where(eq(class_users.user_id, userId)).execute();
+    }).from(class_users)
+    .innerJoin(classes, eq(class_users.class_id, classes.class_id))
+    .where(eq(class_users.user_id, userId)).execute();
   return result;
 };
- 

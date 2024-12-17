@@ -38,3 +38,7 @@ I got to the point in the interface where I was doing the history and requests s
 ## Testing
 
 Using jest for tests
+
+## To DO:
+
+I notice that the password is getting thrown around alot, thus might be some improvements there but this should be good enough atm

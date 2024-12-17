@@ -22,10 +22,10 @@ app.use(helmet());
 app.use(express.json());
 
 app.use('/auth', authRoutes);
-app.use('/users', usersRoutes); 
 
 // Protected Routes
 app.use(authenticateJWT);
+app.use('/users', usersRoutes); 
 app.use('/clients', clientsRoutes);
 app.use('/client-accounts', clientAccountsRoutes);
 app.use('/classes', classesRoutes);

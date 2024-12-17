@@ -1,4 +1,3 @@
-// db/schema/users.ts
 import { serial, text } from 'drizzle-orm/pg-core';
 import { pgTable } from 'drizzle-orm/pg-core';
 

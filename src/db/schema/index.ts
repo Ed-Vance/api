@@ -1,4 +1,3 @@
-// db/schema/index.ts
 export * from './enums';
 export * from './users';
 export * from './clients';

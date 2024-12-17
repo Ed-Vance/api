@@ -34,7 +34,7 @@ describe('Auth', () => {
       password: 'wrongpassword'
     });
     expect(res.status).toBe(401);
-    expect(res.body).toHaveProperty('error', 'Invalid');
+    expect(res.body).toHaveProperty('error', 'Invalid credentials'); // Updated error message
   });
 
   it('should login with correct credentials and return a token', async () => {
@@ -45,6 +45,10 @@ describe('Auth', () => {
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('message', 'Successful');
     expect(res.body.user).toHaveProperty('user_id', createdUserId);
+    expect(res.body.user).toHaveProperty('email', testEmail);
+    expect(res.body.user).toHaveProperty('first_name', 'Login');
+    expect(res.body.user).toHaveProperty('last_name', 'User');
+    expect(res.body.user).not.toHaveProperty('password');
     expect(res.body).toHaveProperty('token');
 
     authToken = res.body.token;
@@ -73,7 +77,7 @@ describe('Auth', () => {
   afterAll(async () => {
     expect(authToken).not.toBeNull();
 
-    if (createdUserId) {
+    if (createdUserId && authToken) {
       const res = await request(app)
         .delete(`/users/${createdUserId}`)
         .set('Authorization', `Bearer ${authToken}`);

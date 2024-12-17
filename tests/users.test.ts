@@ -48,6 +48,7 @@ describe('Users', () => {
 
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty('phone', updatedData.phone);
+      expect(res.body).not.toHaveProperty('password');
     });
 
     it('should delete the created user', async () => {
@@ -59,11 +60,14 @@ describe('Users', () => {
         .set('Authorization', `Bearer ${authToken}`);
 
       expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('user_id', createdUserId);
 
+      // Verify deletion
       const resGet = await request(app)
         .get(`/users/${createdUserId}`)
         .set('Authorization', `Bearer ${authToken}`);
       expect(resGet.status).toBe(404);
+      expect(resGet.body).toHaveProperty('error', 'User not found');
     });
   });
 
@@ -141,22 +145,22 @@ describe('Users', () => {
     });
 
     afterAll(async () => {
-      if (associatedClassId && createdUserId) {
+      if (associatedClassId && createdUserId && authTokenForClasses) {
         await request(app)
           .delete(`/class-users/${associatedClassId}/${createdUserId}`)
           .set('Authorization', `Bearer ${authTokenForClasses}`);
       }
-      if (associatedClassId) {
+      if (associatedClassId && authTokenForClasses) {
         await request(app)
           .delete(`/classes/${associatedClassId}`)
           .set('Authorization', `Bearer ${authTokenForClasses}`);
       }
-      if (associatedClientId) {
+      if (associatedClientId && authTokenForClasses) {
         await request(app)
           .delete(`/clients/${associatedClientId}`)
           .set('Authorization', `Bearer ${authTokenForClasses}`);
       }
-      if (createdUserId) {
+      if (createdUserId && authTokenForClasses) {
         await request(app)
           .delete(`/users/${createdUserId}`)
           .set('Authorization', `Bearer ${authTokenForClasses}`);
