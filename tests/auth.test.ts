@@ -4,12 +4,15 @@ dotenv.config();
 import request from 'supertest';
 import app from '../src/app';
 import jwt from 'jsonwebtoken';
+import { createAndAuthenticateUser } from './helpers/authHelper';
 
 describe('Auth', () => {
   let createdUserId: number | null = null;
   let testEmail: string;
   const password = 'password123';
-  const JWT_SECRET = process.env.JWT_SECRET || 'wrong-key-in-auth-tests';
+  const JWT_SECRET = process.env.JWT_SECRET;
+
+  let authToken: string | null = null;
 
   beforeAll(async () => {
     testEmail = `loginuser${Date.now()}@example.com`;
@@ -20,9 +23,9 @@ describe('Auth', () => {
       password: password,
       phone: '000-111-2222'
     };
-    const res = await request(app).post('/users').send(userData);
-    expect(res.status).toBe(201);
-    createdUserId = res.body.user_id;
+    const authData = await createAndAuthenticateUser(userData);
+    createdUserId = authData.userId;
+    authToken = authData.token;
   });
 
   it('should fail login with wrong credentials', async () => {
@@ -44,16 +47,37 @@ describe('Auth', () => {
     expect(res.body.user).toHaveProperty('user_id', createdUserId);
     expect(res.body).toHaveProperty('token');
 
-    const decoded = jwt.verify(res.body.token, JWT_SECRET) as jwt.JwtPayload;
+    authToken = res.body.token;
+
+    const decoded = jwt.verify(res.body.token, JWT_SECRET!) as jwt.JwtPayload; // Assert JWT_SECRET is defined
     expect(decoded).toHaveProperty('user_id', createdUserId);
     expect(decoded).toHaveProperty('email', testEmail);
     expect(decoded).toHaveProperty('first_name', 'Login');
     expect(decoded).toHaveProperty('last_name', 'User');
   });
 
+  it('should deny access to a protected route without JWT', async () => {
+    const res = await request(app).get('/clients'); // Example protected route
+    expect(res.status).toBe(401);
+    expect(res.body).toHaveProperty('error', 'Authorization header missing.');
+  });
+
+  it('should deny access to a protected route with invalid JWT', async () => {
+    const res = await request(app)
+      .get('/clients') // Example protected route
+      .set('Authorization', `Bearer invalidtoken`);
+    expect(res.status).toBe(403);
+    expect(res.body).toHaveProperty('error', 'Invalid or expired token.');
+  });
+
   afterAll(async () => {
+    expect(authToken).not.toBeNull();
+
     if (createdUserId) {
-      await request(app).delete(`/users/${createdUserId}`);
+      const res = await request(app)
+        .delete(`/users/${createdUserId}`)
+        .set('Authorization', `Bearer ${authToken}`);
+      expect(res.status).toBe(200);
     }
   });
 });

@@ -6,10 +6,6 @@ module.exports = {
   testMatch: ['**/tests/**/*.test.ts'],
   transform: {
     '^.+\\.ts$': ['ts-jest', {
-      // Add any ts-jest specific configurations here
-      // For example:
-      // diagnostics: true,
-      // tsconfig: 'tsconfig.json',
     }],
   },
 };

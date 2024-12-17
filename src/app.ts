@@ -12,6 +12,7 @@ import classUsersRoutes from './routes/classUsersRoutes';
 import environmentRoutes from './routes/environmentRoutes';
 import environmentHistoryRoutes from './routes/environmentHistoryRoutes';
 import authRoutes from './routes/authRoutes';
+import { authenticateJWT } from './middleware/authMiddleware';
 
 const app: Application = express();
 
@@ -20,15 +21,17 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
-// Routes
-app.use('/users', usersRoutes);
+app.use('/auth', authRoutes);
+app.use('/users', usersRoutes); 
+
+// Protected Routes
+app.use(authenticateJWT);
 app.use('/clients', clientsRoutes);
 app.use('/client-accounts', clientAccountsRoutes);
 app.use('/classes', classesRoutes);
 app.use('/class-users', classUsersRoutes);
 app.use('/environments', environmentRoutes);
 app.use('/environment-history', environmentHistoryRoutes);
-app.use('/auth', authRoutes);
 
 // 404
 app.use((req, res) => {
