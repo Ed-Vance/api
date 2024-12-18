@@ -8,3 +8,4 @@ docker run --name edvance \
 docker ps
 rm -rf ./drizzle
 npx drizzle-kit generate
+npx drizzle-kit migrate

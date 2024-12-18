@@ -42,3 +42,10 @@ Using jest for tests
 ## To DO:
 
 I notice that the password is getting thrown around alot, thus might be some improvements there but this should be good enough atm
+
+## Packages I had to install:
+Drizzle
+bcrypt
+--save-dev @types/bcrypt
+
+## The most up to date repo (the one where this was added and before versions runs) however I did have some random bug where it wouldnt pass the tests and wouldnt recognise the users table, I think this was fixed by the npx drizzle-kit migrate command but I could be wrong, im not sure entirely what fixed it.
