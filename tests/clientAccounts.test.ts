@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import request from 'supertest';
 import app from '../src/app';
 import { createAndAuthenticateUser } from './helpers/authHelper';
@@ -33,7 +36,7 @@ describe('Client_Accounts', () => {
       autorenew: false
     };
     const clientRes = await request(app)
-      .post('/clients')
+      .post('/clients') 
       .set('Authorization', `Bearer ${authToken}`)
       .send(clientData);
     expect(clientRes.status).toBe(201);
@@ -91,12 +94,12 @@ describe('Client_Accounts', () => {
   });
 
   afterAll(async () => {
-    if (createdClientId && createdUserId) {
-      // Ensure client_account is deleted
+    if (createdClientAccountClientId && createdClientAccountUserId) {
       await request(app)
-        .delete(`/client-accounts/${createdClientId}/${createdUserId}`)
+        .delete(`/client-accounts/${createdClientAccountClientId}/${createdClientAccountUserId}`)
         .set('Authorization', `Bearer ${authToken}`);
-
+    }
+    if (createdClientId && authToken && createdUserId) {
       // Delete client
       await request(app)
         .delete(`/clients/${createdClientId}`)

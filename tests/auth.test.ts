@@ -1,3 +1,5 @@
+// tests/auth.test.ts
+
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -29,7 +31,7 @@ describe('Auth', () => {
   });
 
   it('should fail login with wrong credentials', async () => {
-    const res = await request(app).post('/auth/login').send({
+    const res = await request(app).post('/auth/login').send({ // Updated endpoint
       email: testEmail,
       password: 'wrongpassword'
     });
@@ -38,7 +40,7 @@ describe('Auth', () => {
   });
 
   it('should login with correct credentials and return a token', async () => {
-    const res = await request(app).post('/auth/login').send({
+    const res = await request(app).post('/auth/login').send({ // Updated endpoint
       email: testEmail,
       password: password
     });
@@ -53,7 +55,7 @@ describe('Auth', () => {
 
     authToken = res.body.token;
 
-    const decoded = jwt.verify(res.body.token, JWT_SECRET!) as jwt.JwtPayload; // Assert JWT_SECRET is defined
+    const decoded = jwt.verify(res.body.token, JWT_SECRET!) as jwt.JwtPayload; 
     expect(decoded).toHaveProperty('user_id', createdUserId);
     expect(decoded).toHaveProperty('email', testEmail);
     expect(decoded).toHaveProperty('first_name', 'Login');
@@ -61,14 +63,14 @@ describe('Auth', () => {
   });
 
   it('should deny access to a protected route without JWT', async () => {
-    const res = await request(app).get('/clients'); // Example protected route
+    const res = await request(app).get('/clients'); 
     expect(res.status).toBe(401);
     expect(res.body).toHaveProperty('error', 'Authorization header missing.');
   });
 
   it('should deny access to a protected route with invalid JWT', async () => {
     const res = await request(app)
-      .get('/clients') // Example protected route
+      .get('/clients') 
       .set('Authorization', `Bearer invalidtoken`);
     expect(res.status).toBe(403);
     expect(res.body).toHaveProperty('error', 'Invalid or expired token.');

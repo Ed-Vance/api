@@ -7,6 +7,13 @@ export async function runTests() {
   const jestConfig: Config.InitialOptions = {
     testEnvironment: 'node',
     verbose: true,
+    preset: 'ts-jest',
+    moduleFileExtensions: ['ts', 'js'],
+    testMatch: ['**/tests/**/*.test.ts'],
+    transform: {
+      '^.+\\.ts$': ['ts-jest', {
+      }],
+    },
   };
 
   const result = await runCLI(

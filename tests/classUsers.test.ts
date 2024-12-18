@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import request from 'supertest';
 import app from '../src/app';
 import { createAndAuthenticateUser } from './helpers/authHelper';
@@ -34,7 +37,7 @@ describe('Class_Users', () => {
       autorenew: true
     };
     const clientRes = await request(app)
-      .post('/clients')
+      .post('/clients') 
       .set('Authorization', `Bearer ${authToken}`)
       .send(clientData);
     expect(clientRes.status).toBe(201);
@@ -47,7 +50,7 @@ describe('Class_Users', () => {
       license_id: createdClientId
     };
     const classRes = await request(app)
-      .post('/classes')
+      .post('/classes') 
       .set('Authorization', `Bearer ${authToken}`)
       .send(classData);
     expect(classRes.status).toBe(201);
@@ -65,7 +68,7 @@ describe('Class_Users', () => {
       role: 'student'
     };
     const res = await request(app)
-      .post('/class-users')
+      .post('/class-users') 
       .set('Authorization', `Bearer ${authToken}`)
       .send(classUserData);
     expect(res.status).toBe(201);
@@ -121,7 +124,6 @@ describe('Class_Users', () => {
 
   afterAll(async () => {
     if (createdClassUserClassId && createdClassUserUserId) {
-      // Ensure class_user is deleted
       await request(app)
         .delete(`/class-users/${createdClassUserClassId}/${createdClassUserUserId}`)
         .set('Authorization', `Bearer ${authToken}`);

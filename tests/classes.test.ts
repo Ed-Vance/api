@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import request from 'supertest';
 import app from '../src/app';
 import { createAndAuthenticateUser } from './helpers/authHelper';
@@ -34,7 +37,7 @@ describe('Classes', () => {
 
       // Create a client
       const clientRes = await request(app)
-        .post('/clients')
+        .post('/clients') 
         .set('Authorization', `Bearer ${authToken}`)
         .send(clientData);
       expect(clientRes.status).toBe(201);
@@ -199,7 +202,7 @@ describe('Classes', () => {
     });
 
     afterAll(async () => {
-      if (createdClassId && createdUserId) {
+      if (createdClassId && createdUserId && authToken) {
         // Delete class-user association
         await request(app)
           .delete(`/class-users/${createdClassId}/${createdUserId}`)

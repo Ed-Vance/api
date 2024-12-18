@@ -1,61 +1,60 @@
-import jwt from 'jsonwebtoken';
+import { getUserByEmail, createUser } from './usersService';
 import bcrypt from 'bcrypt';
-import * as usersService from './usersService';
+import jwt from 'jsonwebtoken';
+import { User } from '../types/User';
+import dotenv from 'dotenv';
 
-const JWT_SECRET = process.env.JWT_SECRET;
+dotenv.config();
 
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET is not defined in the environment variables');
-}
-
-interface UserWithoutPassword {
-  user_id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-}
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
+const JWT_EXPIRES_IN = '1h';
 
 /**
- * Validates user credentials and generates a JWT token upon successful authentication.
+ * Generates a JWT token for a given user.
  *
- * @async
- * @function checkUserCredentials
- * @param {string} email - The user's email address.
- * @param {string} password - The user's plaintext password.
- * @returns {Promise<{ user: UserWithoutPassword; token: string } | null>} 
- *   - **Success:** Returns an object containing the user data (excluding password) and a JWT token.
- *   - **Failure:** Returns `null` if authentication fails.
- * @throws {Error} Throws an error if JWT_SECRET is not defined or if any database operation fails.
+ * @function generateToken
+ * @param {User} user - The user object.
+ * @returns {string} - The JWT token.
  */
-export const checkUserCredentials = async (email: string, password: string) => {
-  console.log("Checking")
-  const user = await usersService.getUserByEmail(email);
-  
-  if (!user) return null;
-
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (isMatch) {
-    const { password: _, ...userWithoutPassword } = user;
-    
-    const token = jwt.sign(
-      {
-        user_id: userWithoutPassword.user_id,
-        email: userWithoutPassword.email,
-        first_name: userWithoutPassword.first_name,
-        last_name: userWithoutPassword.last_name,
-      },
-      JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-    return { user: userWithoutPassword, token };
-  }
-  
-  return null;
+const generateToken = (user: User): string => {
+  const payload = { 
+    user_id: user.user_id, 
+    email: user.email,
+    first_name: user.first_name,
+    last_name: user.last_name
+  };
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 };
 
 /**
- * Handles user signup by creating a new user and generating a JWT token.
+ * Checks user credentials for login.
+ *
+ * @async
+ * @function checkUserCredentials
+ * @param {string} email - The user's email.
+ * @param {string} password - The user's plaintext password.
+ * @returns {Promise<{ user: User; token: string } | null>} 
+ *   - **Success:** Returns the user object and JWT token.
+ *   - **Failure:** Returns null if credentials are invalid.
+ * @throws {Error} Throws an error if the database query fails.
+ */
+export const checkUserCredentials = async (email: string, password: string): Promise<{ user: User; token: string } | null> => {
+  const user = await getUserByEmail(email);
+  if (!user || !user.password) {
+    return null;
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) {
+    return null;
+  }
+
+  const token = generateToken(user);
+  return { user, token };
+};
+
+/**
+ * Signs up a new user.
  *
  * @async
  * @function signup
@@ -65,9 +64,9 @@ export const checkUserCredentials = async (email: string, password: string) => {
  * @param {string} userData.email - The email address of the user.
  * @param {string} userData.password - The plaintext password of the user.
  * @param {string} userData.phone - The phone number of the user.
- * @returns {Promise<{ user: UserWithoutPassword; token: string }>} 
- *   - **Success:** Returns an object containing the user data (excluding password) and a JWT token.
- *   - **Failure:** Throws an error if the email already exists or if any database operation fails.
+ * @returns {Promise<{ user: User; token: string }>} 
+ *   - **Success:** Returns the new user object and JWT token.
+ *   - **Failure:** Throws an error if user creation fails.
  */
 export const signup = async (userData: {
   first_name: string;
@@ -75,27 +74,18 @@ export const signup = async (userData: {
   email: string;
   password: string;
   phone: string;
-}) => {
-  // Check if user with email already exists
-  const existingUser = await usersService.getUserByEmail(userData.email);
+}): Promise<{ user: User; token: string }> => {
+  // Check if user already exists
+  const existingUser = await getUserByEmail(userData.email);
   if (existingUser) {
     throw new Error('User with this email already exists.');
   }
 
-  // Create user
-  const newUser = await usersService.createUser(userData);
+  // Create new user
+  const newUser = await createUser(userData);
 
   // Generate JWT token
-  const token = jwt.sign(
-    {
-      user_id: newUser.user_id,
-      email: newUser.email,
-      first_name: newUser.first_name,
-      last_name: newUser.last_name,
-    },
-    JWT_SECRET,
-    { expiresIn: '1h' }
-  );
+  const token = generateToken(newUser);
 
   return { user: newUser, token };
 };

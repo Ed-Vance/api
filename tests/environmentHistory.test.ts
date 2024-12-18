@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import request from 'supertest';
 import app from '../src/app';
 import { createAndAuthenticateUser } from './helpers/authHelper';
@@ -35,7 +38,7 @@ describe('Environment_History', () => {
       autorenew: true
     };
     const clientRes = await request(app)
-      .post('/clients')
+      .post('/clients') 
       .set('Authorization', `Bearer ${authToken}`)
       .send(clientData);
     expect(clientRes.status).toBe(201);
@@ -63,7 +66,7 @@ describe('Environment_History', () => {
       active_status: true
     };
     const envRes = await request(app)
-      .post('/environments')
+      .post('/environments') 
       .set('Authorization', `Bearer ${authToken}`)
       .send(environmentData);
     expect(envRes.status).toBe(201);
@@ -87,7 +90,7 @@ describe('Environment_History', () => {
       message_type: 'response'
     };
     const res = await request(app)
-      .post('/environment-history')
+      .post('/environment-history') 
       .set('Authorization', `Bearer ${authToken}`)
       .send(historyData);
     expect(res.status).toBe(201);

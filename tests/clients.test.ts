@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import request from 'supertest';
 import app from '../src/app';
 import { createAndAuthenticateUser } from './helpers/authHelper';
@@ -32,7 +35,7 @@ describe('Clients', () => {
       autorenew: true
     };
     const res = await request(app)
-      .post('/clients')
+      .post('/clients') 
       .set('Authorization', `Bearer ${authToken}`)
       .send(clientData);
 

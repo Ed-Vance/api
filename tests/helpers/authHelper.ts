@@ -23,7 +23,7 @@ interface AuthenticatedUser {
 export const createAndAuthenticateUser = async (userData: UserCredentials): Promise<AuthenticatedUser> => {
   // Sign up the user via /auth/signup
   const signUpRes = await request(app)
-    .post('/auth/signup')
+    .post('/auth/signup') 
     .send(userData);
   
   if (signUpRes.status !== 201) {
@@ -34,7 +34,7 @@ export const createAndAuthenticateUser = async (userData: UserCredentials): Prom
   
   // Authenticate the user via /auth/login
   const loginRes = await request(app)
-    .post('/auth/login')
+    .post('/auth/login') 
     .send({
       email: userData.email,
       password: userData.password,

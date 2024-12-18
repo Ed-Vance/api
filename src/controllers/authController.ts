@@ -1,5 +1,6 @@
 import { Request, Response, RequestHandler } from 'express';
 import * as authService from '../services/authService';
+import { sanitizeUser, SanitizedUser } from '../helpers/sanitize';
 
 /**
  * Handles user login by verifying credentials and issuing a JWT token.
@@ -9,7 +10,7 @@ import * as authService from '../services/authService';
  * @param {Request} req - Express request object containing `email` and `password` in the body.
  * @param {Response} res - Express response object used to send back the response.
  * @returns {Promise<void>} 
- *   - **Success:** Sends a JSON response with a success message, user data, and JWT token.
+ *   - **Success:** Sends a JSON response with a success message, sanitized user data, and JWT token.
  *   - **Failure:** Sends a JSON response with an error message and appropriate HTTP status code.
  */
 export const login: RequestHandler = async (req: Request, res: Response) => {
@@ -24,7 +25,8 @@ export const login: RequestHandler = async (req: Request, res: Response) => {
     const authResult = await authService.checkUserCredentials(email, password);
     if (authResult) {
       const { user, token } = authResult;
-      res.json({ message: 'Successful', user, token });
+      const sanitizedUser: SanitizedUser = sanitizeUser(user);
+      res.json({ message: 'Successful', user: sanitizedUser, token });
     } else {
       res.status(401).json({ error: 'Invalid credentials' });
     }
@@ -42,7 +44,7 @@ export const login: RequestHandler = async (req: Request, res: Response) => {
  * @param {Request} req - Express request object containing `first_name`, `last_name`, `email`, `password`, and `phone` in the body.
  * @param {Response} res - Express response object used to send back the response.
  * @returns {Promise<void>} 
- *   - **Success:** Sends a JSON response with a success message, user data, and JWT token.
+ *   - **Success:** Sends a JSON response with a success message, sanitized user data, and JWT token.
  *   - **Failure:** Sends a JSON response with an error message and appropriate HTTP status code.
  */
 export const signup: RequestHandler = async (req: Request, res: Response) => {
@@ -55,7 +57,8 @@ export const signup: RequestHandler = async (req: Request, res: Response) => {
 
   try {
     const authResult = await authService.signup({ first_name, last_name, email, password, phone });
-    res.status(201).json({ message: 'User created successfully', user: authResult.user, token: authResult.token });
+    const sanitizedUser: SanitizedUser = sanitizeUser(authResult.user);
+    res.status(201).json({ message: 'User created successfully', user: sanitizedUser, token: authResult.token });
   } catch (error: any) {
     if (error.message === 'User with this email already exists.') {
       res.status(409).json({ error: error.message });
