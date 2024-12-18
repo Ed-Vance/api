@@ -73,13 +73,7 @@ export const createEnvironmentHistory: RequestHandler = async (req: Request, res
   }
 
   try {
-    const newHistory = await environmentHistoryService.createEnvironmentHistory({
-      environment_id,
-      user_id,
-      timestamp: new Date(timestamp),
-      message,
-      message_type,
-    });
+    const newHistory = await environmentHistoryService.createEnvironmentHistory({environment_id,user_id,timestamp: new Date(timestamp),message,message_type,});
     res.status(201).json(newHistory);
   } catch (error: any) {
     res.status(500).json({ error: error.message });

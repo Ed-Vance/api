@@ -106,10 +106,7 @@ export const createUser = async (userData: {
   phone: string;
 }): Promise<User> => {
   const hashedPassword = await bcrypt.hash(userData.password, SALT_ROUNDS);
-  const result = await db.insert(users).values({
-    ...userData,
-    password: hashedPassword,
-  }).returning().execute();
+  const result = await db.insert(users).values({...userData,password: hashedPassword,}).returning().execute();
   const user = result[0];
   return {
     user_id: user.user_id,
@@ -210,18 +207,7 @@ export const getUserClasses = async (userId: number): Promise<Array<{
   class_reference: string | null;
   role: string | null;
 }>> => {
-  const result = await db.select({
-      class_id: classes.class_id,
-      class_name: classes.class_name,
-      class_reference: classes.class_reference,
-      role: class_users.role
-    }).from(class_users)
-    .innerJoin(classes, eq(class_users.class_id, classes.class_id))
+  const result = await db.select({class_id: classes.class_id,class_name: classes.class_name,class_reference: classes.class_reference,role: class_users.role}).from(class_users).innerJoin(classes, eq(class_users.class_id, classes.class_id))
     .where(eq(class_users.user_id, userId)).execute();
-  return result.map(classInfo => ({
-    class_id: classInfo.class_id,
-    class_name: classInfo.class_name,
-    class_reference: classInfo.class_reference,
-    role: classInfo.role,
-  }));
+  return result.map(classInfo => ({class_id: classInfo.class_id,class_name: classInfo.class_name,class_reference: classInfo.class_reference,role: classInfo.role,}));
 };

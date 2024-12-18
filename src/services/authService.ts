@@ -17,12 +17,7 @@ const JWT_EXPIRES_IN = '1h';
  * @returns {string} - The JWT token.
  */
 const generateToken = (user: User): string => {
-  const payload = { 
-    user_id: user.user_id, 
-    email: user.email,
-    first_name: user.first_name,
-    last_name: user.last_name
-  };
+  const payload = { user_id: user.user_id, email: user.email,first_name: user.first_name,last_name: user.last_name};
   return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 };
 

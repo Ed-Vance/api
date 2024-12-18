@@ -128,8 +128,6 @@ export const getClassEnvironments = async (classId: number) => {
 // Kinda a duplicate but still kept wasnt kinda sure where to go
 export const getClassUsers = async (classId: number) => {
   const result = await db.select({user_id: users.user_id, first_name: users.first_name,last_name: users.last_name,email: users.email,role: class_users.role})
-  .from(class_users)
-  .innerJoin(users, eq(class_users.user_id, users.user_id))
-  .where(eq(class_users.class_id, classId)).execute();
+  .from(class_users).innerJoin(users, eq(class_users.user_id, users.user_id)).where(eq(class_users.class_id, classId)).execute();
   return result;
 };
