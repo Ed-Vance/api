@@ -5,6 +5,7 @@
 -   Run `configure-docker.sh`
 -   Create a .env file
 -   add `DATABASE_URL=postgres://postgres:admin@localhost:5432/postgres`
+-   add `JWT_SECRET=maxsecret`
 
 ## Running backend
 
@@ -22,6 +23,7 @@ docker run --name edvance \
 docker ps
 rm -rf ./drizzle
 npx drizzle-kit generate
+npx drizzle-kit migrate
 
 ## Database design
 
@@ -51,4 +53,3 @@ bcrypt
 This repo passes my tests and runs however I did have some random bug in one of the previous commits where it wouldnt pass the tests and wouldnt recognise the users table, this was fixed by the npx drizzle-kit migrate command.
 
 You will also need to have a JWT_SECRET=maxsecret in your .env
-
