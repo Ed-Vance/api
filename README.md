@@ -48,7 +48,7 @@ bcrypt
 1. I suspect this should do for the back end for now, I can touch it up once I am back, the more notable thing is the auth pass where the only routes that can be accessed when not logged in are sign up and login (that took a bit of time). 
 
 ## Notes:
-This repo passes my tests and runs however I did have some random bug in one of the previous commits where it wouldnt pass the tests and wouldnt recognise the users table, I think this was fixed by the npx drizzle-kit migrate command but I could be wrong, im not sure entirely what fixed it.
+This repo passes my tests and runs however I did have some random bug in one of the previous commits where it wouldnt pass the tests and wouldnt recognise the users table, this was fixed by the npx drizzle-kit migrate command.
 
 You will also need to have a JWT_SECRET=maxsecret in your .env
 
