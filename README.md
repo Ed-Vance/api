@@ -48,11 +48,8 @@ bcrypt
 
 ## To do:
 1. I suspect this should do for the back end for now, I can touch it up once I am back, the more notable thing is the auth pass where the only routes that can be accessed when not logged in are sign up and login (that took a bit of time). 
-2. I want to implement the JWT token stuff a bit better to maintain the authentication better, I aim to have it refresh every 15 mins for some shorter term token and then have some longer term token that would require the user to log in for. Need to also look at how to manage these from the front end, but I have some vauge idea how to maintain this. 
+2. I want to implement the JWT token stuff a bit better to maintain the authentication better.
 
 ## Notes:
 This repo passes my tests and runs however I did have some random bug in one of the previous commits where it wouldnt pass the tests and wouldnt recognise the users table, this was fixed by the npx drizzle-kit migrate command.
-
 You will also need to have a JWT_SECRET=maxsecret in your .env
-
-As I write this note I notice that it might be a pain for you to write the code for the auth logic, thus feel free to comment out the middle ware I am fairly sure it should be fine once that is commented out. 
