@@ -35,8 +35,8 @@ I got to the point in the interface where I was doing the history and requests s
 2. Added an auth route for validating passwords. 
 3. Added in the environment history object, also allowed multiple accounts to be moderators to a client account (used to be customer account feel free to change it)
 4. Added generated comments.
-5. Tests were done using generated content with some modifications, thought it could be good but didnt want to put too much effort into them given the speed of which we want to get this application running.
-6. We now have protected route here and the functionality I believe the front end requires, once back I plan to refactor and move stuff around to make it a bit more efficiently and better done, however as the time currently is 12am and I fly out at 6am I am done until I get back from holiday.
+5. Tests were done using generated content with some modifications, thought it could be good but didnt want to put too much effort into them given the speed of which we want to get this application running. These are done from more of a mock standpoint and dont actually run on the database
+6. This is currently working with my front end.
 
 ## Testing
 
