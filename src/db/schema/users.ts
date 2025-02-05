@@ -1,20 +1,11 @@
-import { pgTable as table } from "drizzle-orm/pg-core";
-import * as t from "drizzle-orm/pg-core";
+import { serial, text } from 'drizzle-orm/pg-core';
+import { pgTable } from 'drizzle-orm/pg-core';
 
-export const userTypes = t.pgEnum("userTypes", ["student", "teacher", "admin"]);
-
-//@Max something to think about
-//is a student always a student, or are they a teacher in some classes
-//I think admins may be better off being a toggle, or we control all of this via the "class_user" table
-// by moving this "type" to there, and adding an "is_admin" flag. (or more fine tuned permissions.)
-
-export const users = table("users", {
-    id: t.serial("user_id").primaryKey(),
-    display_name: t.text().notNull(),
-    email: t.text().notNull(),
-    password_hash: t.text().notNull(), //extend to use oauth2 at some point
-    is_admin: t.boolean().notNull().default(false),
-    // type: userTypes(), //lets think about different types of users later as per ^
-    //I personally think a teacher is always a teacher, a student always a student
-    //this is true 99.9% of of the time.
+export const users = pgTable('users', {
+  user_id: serial('user_id').primaryKey(), // primary key, not null
+  first_name: text('first_name'), // not null
+  last_name: text('last_name'), // not null
+  email: text('email').unique(), // unique, not null
+  password: text('password').notNull(), // not null
+  phone: text('phone'), // not null
 });
